@@ -14,36 +14,43 @@
                     'mracus': 'https://media.licdn.com/media/p/8/005/05d/0b0/2645c4a.jpg',
                 }
 
+                // Needed to clear the intervals inside the closures 
+                var checkTweetsInterval;
 
-                var $body = $('body');
-                //$body.html('');
+                function displayStream(stream) {
+                    console.log(stream);
+                    $('#tweets').html('');
 
-                function displayStream(stream, length) {
-                    function displayNewPosts(stream) {
-                        var index = stream.length - 1;
-
-                        while(index >= length){
+                    function displayNewTweets(stream, index) {    
+                        while(index <= stream.length -1){
                             var tweet = stream[index];
                             var time = '<time class="timeago" datetime="' + tweet.created_at.toISOString() + '">' + tweet.created_at.toLocaleDateString() + '</time>';
-                            var user = '<a class="user" href="#">@' + tweet.user + '</a>';
-                            var $tweet = $('<section id="tweets"></section>');
+                            var user = '<a class="user" href="#" data-user="' + tweet.user + '">@' + tweet.user + '</a>';
+                            var $tweet = $('<div></div>');
                             $tweet.html(user + ': ' + tweet.message + ' ' + time);
                             $tweet.prependTo($('#tweets'));
-                            index -= 1;
+                            index++;
                             $(".timeago").timeago();
                         }
-                        return stream.length;
+                        return index;
                     }
+                    // Loads the pregenerated posts
+                    var current_length = displayNewTweets(stream, 0);
 
-                    var length = displayNewPosts(stream, 0);
-                    setInterval(function(){
-                        if (streams.home.length > length)
-                            length = displayNewPosts(stream, length);
+                    checkTweetsInterval = setInterval(function(){
+                        // If there are new tweets             
+                        if (stream.length > current_length) {
+                            current_length = displayNewTweets(stream, current_length);
+                        }
                     }, 250);
                 }
 
-
                 displayStream(streams.home);
+
+                $('body').on('click', '.user', function(){
+                    clearInterval(checkTweetsInterval);
+                    displayStream(streams.users[$(this).data('user')]);
+                });
                 
             });
         </script>
