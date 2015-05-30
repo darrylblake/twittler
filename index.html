@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <script src="jquery.js"></script>
-        <script src="data_generator.js"></script>
-        <script src="jquery.timeago.js"></script>
+        <script src="js/jquery.js"></script>
+        <script src="js/data_generator.js"></script>
+        <script src="js/jquery.timeago.js"></script>
     </head>
     <body>
         <nav>
             <span class="home">Home</span>
         </nav>
         <form class="post-tweet" action="#" method="post">
-            <input type="text" placeholder="username" required>
-            <textarea></textarea>
+            <input name="username" type="text" placeholder="username" required>
+            <textarea name="message" placeholder="What's happening?"></textarea>
             <button>Post</button>
         </form>
         <section id="tweets"></section>
@@ -31,18 +31,20 @@
 
                 function displayStream(stream) {
                     clearInterval(checkTweetsInterval);
-                    console.log(stream);
+                    // Clear previous tweets
                     $('#tweets').html('');
 
                     function displayNewTweets(stream, index) {    
                         while(index <= stream.length -1){
                             var tweet = stream[index];
                             var time = '<time class="timeago" datetime="' + tweet.created_at.toISOString() + '">' + tweet.created_at.toLocaleDateString() + '</time>';
-                            var user = '<a class="user" href="#" data-user="' + tweet.user + '">@' + tweet.user + '</a>';
-                            var $tweet = $('<div></div>');
-                            $tweet.html(user + ': ' + tweet.message + ' ' + time);
+                            var user = '<span class="user" data-user="' + tweet.user + '">@' + tweet.user + '</span>';
+                            var message = '<span class="message">' + tweet.message + '</span>';
+                            var $tweet = $('<div class="tweet"></div>');
+                            $tweet.html(user + message + time);
                             $tweet.prependTo($('#tweets'));
                             index++;
+                            // Not sure how else to trigger this on nodes dynamically added to the DOM?
                             $(".timeago").timeago();
                         }
                         return index;
@@ -57,15 +59,32 @@
                         }
                     }, 250);
                 }
-
+                // Display the home stream on load
                 displayStream(streams.home);
 
+                // Displaying users tweets
                 $('#tweets').on('click', '.user', function(){
                     displayStream(streams.users[$(this).data('user')]);
                 });
+                
+                // Displaying all tweets
                 $('nav').on('click', '.home', function(){
                     displayStream(streams.home);
-                });                
+                });
+
+                // Posting a new twweet
+                $('.post-tweet').on('click', 'button', function(event){
+                    var form = $(this).closest('form');
+                    // Defined globally in data_generator.js
+                    window.visitor = form.find('[name="username"]').val();
+                    if (!streams.users[visitor])
+                        streams.users[visitor] = [];
+                    var message = form.find('[name="message"]').val();
+                    writeTweet(message);                    
+
+                    // Prevent the HTML form from submitting
+                    event.preventDefault();
+                });
             });
         </script>
     </body>
