@@ -3,37 +3,45 @@
     <head>
         <script src="jquery.js"></script>
         <script src="data_generator.js"></script>
+        <script src="jquery.timeago.js"></script>
     </head>
     <body>
+        <section id="tweets"></section>
         <script>
             $(document).ready(function(){
-
-                var $body = $('body');
-                $body.html('');
-
-                function displayStream(length) {
-                    var index = streams.home.length - 1;
-                    while(index >= length){
-                        var tweet = streams.home[index];
-                        var $tweet = $('<div></div>');
-                        $tweet.text('@' + tweet.user + ': ' + tweet.message + ' - ' + tweet.created_at);
-                        $tweet.prependTo($body);
-                        index -= 1;
-                    }
-                    return streams.home.length;
+                var avatars = {
+                    'douglascalhoun': 'https://media.licdn.com/media/p/4/000/149/320/1c2f421.jpg',
+                    'mracus': 'https://media.licdn.com/media/p/8/005/05d/0b0/2645c4a.jpg',
                 }
 
-                var length = displayStream(0);
+                var $body = $('body');
+                //$body.html('');
+
+                function displayStream(stream, length) {
+                    var index = stream.length - 1;
+                    while(index >= length){
+                        var tweet = streams.home[index];
+                        var time = '<time class="timeago" datetime="' + tweet.created_at.toISOString() + '">' + tweet.created_at.toLocaleDateString() + '</time>';
+                        var user = '<a class="user" href="#">@' + tweet.user + '</a>';
+                        var $tweet = $('<section id="tweets"></section>');
+                        $tweet.html(user + ': ' + tweet.message + ' ' + time);
+                        $tweet.prependTo($('#tweets'));
+                        index -= 1;
+                        $(".timeago").timeago();
+                    }
+                    return stream.length;
+                }
+
+                var length = displayStream(streams.home, 0);
 
                 function checkStream() {
                     setInterval(function(){
                         if (streams.home.length > length)
-                            length = displayStream(length);
+                            length = displayStream(streams.home, length);
                     }, 2000);
                 }
                 checkStream();
             });
-
         </script>
     </body>
 </html>
