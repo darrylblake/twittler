@@ -14,33 +14,37 @@
                     'mracus': 'https://media.licdn.com/media/p/8/005/05d/0b0/2645c4a.jpg',
                 }
 
+
                 var $body = $('body');
                 //$body.html('');
 
                 function displayStream(stream, length) {
-                    var index = stream.length - 1;
-                    while(index >= length){
-                        var tweet = streams.home[index];
-                        var time = '<time class="timeago" datetime="' + tweet.created_at.toISOString() + '">' + tweet.created_at.toLocaleDateString() + '</time>';
-                        var user = '<a class="user" href="#">@' + tweet.user + '</a>';
-                        var $tweet = $('<section id="tweets"></section>');
-                        $tweet.html(user + ': ' + tweet.message + ' ' + time);
-                        $tweet.prependTo($('#tweets'));
-                        index -= 1;
-                        $(".timeago").timeago();
+                    function displayNewPosts(stream) {
+                        var index = stream.length - 1;
+
+                        while(index >= length){
+                            var tweet = stream[index];
+                            var time = '<time class="timeago" datetime="' + tweet.created_at.toISOString() + '">' + tweet.created_at.toLocaleDateString() + '</time>';
+                            var user = '<a class="user" href="#">@' + tweet.user + '</a>';
+                            var $tweet = $('<section id="tweets"></section>');
+                            $tweet.html(user + ': ' + tweet.message + ' ' + time);
+                            $tweet.prependTo($('#tweets'));
+                            index -= 1;
+                            $(".timeago").timeago();
+                        }
+                        return stream.length;
                     }
-                    return stream.length;
-                }
 
-                var length = displayStream(streams.home, 0);
-
-                function checkStream() {
+                    var length = displayNewPosts(stream, 0);
                     setInterval(function(){
                         if (streams.home.length > length)
-                            length = displayStream(streams.home, length);
-                    }, 2000);
+                            length = displayNewPosts(stream, length);
+                    }, 250);
                 }
-                checkStream();
+
+
+                displayStream(streams.home);
+                
             });
         </script>
     </body>
