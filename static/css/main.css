@@ -102,38 +102,40 @@ img {
   display: table;
   clear: both; }
 
-.post-tweet input, .post-tweet textarea, .post-tweet button {
-  border: none;
-  font-size: 16px;
-  line-height: 20px;
-  color: #292429;
-  background: none;
-  border-radius: 5px;
-  font-weight: normal;
+.post-tweet {
   margin-bottom: 10px; }
-.post-tweet button {
-  cursor: pointer;
-  float: right;
-  background: none;
-  background: #00B9D7;
-  color: #FFF;
-  width: 190px;
-  height: 132px;
-  font-size: 40px; }
-  .post-tweet button:hover {
-    background: #F7208B; }
-.post-tweet input, .post-tweet textarea {
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  float: left;
-  width: 400px;
-  padding: 10px; }
-  .post-tweet input:focus, .post-tweet textarea:focus {
-    background: rgba(255, 255, 255, 0.5);
-    outline: none; }
-.post-tweet textarea {
-  clear: left;
-  resize: none;
-  height: 80px; }
+  .post-tweet input, .post-tweet textarea, .post-tweet button {
+    border: none;
+    font-size: 16px;
+    line-height: 20px;
+    color: #292429;
+    background: none;
+    border-radius: 5px;
+    font-weight: normal;
+    margin-bottom: 10px; }
+  .post-tweet button {
+    cursor: pointer;
+    float: right;
+    background: none;
+    background: #00B9D7;
+    color: #FFF;
+    width: 190px;
+    height: 132px;
+    font-size: 40px; }
+    .post-tweet button:hover {
+      background: #F7208B; }
+  .post-tweet input, .post-tweet textarea {
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    float: left;
+    width: 400px;
+    padding: 10px; }
+    .post-tweet input:focus, .post-tweet textarea:focus {
+      background: rgba(255, 255, 255, 0.5);
+      outline: none; }
+  .post-tweet textarea {
+    clear: left;
+    resize: none;
+    height: 80px; }
 
 .tweet {
   background: rgba(255, 255, 255, 0.5);
@@ -152,6 +154,8 @@ img {
     color: #F7208B;
     display: block;
     font-size: 20px; }
+  .tweet .tag {
+    color: #00B9D7; }
   .tweet time {
     position: absolute;
     background: #FFF;

@@ -21,7 +21,9 @@ $(document).ready(function(){
                 var image = avatars[tweet.user] ? avatars[tweet.user] : 'static/layout/avatar.png';
                 var avatar = '<img class="avatar" src="' + image + '">'
                 var user = '<span class="user">@' + tweet.user + '</span>';
-                var message = '<span class="message">' + tweet.message + '</span>';
+
+                var message = tweet.message.replace(/(#\w+)/g,'<span class="tag">$1</span>');
+                message = '<span class="message">' + message + '</span>';
                 var $tweet = $('<div class="tweet" data-user="' + tweet.user + '"></div>').hide();
                 $tweet.html(avatar + user + message + time);
                 $tweet.prependTo($('#tweets'));
