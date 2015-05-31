@@ -1,29 +1,33 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
-        <script src="js/jquery.js"></script>
-        <script src="js/data_generator.js"></script>
-        <script src="js/jquery.timeago.js"></script>
+        <meta charset="UTF-8">
+        <title>Darryl's Twittler</title>
+        <script src="static/js/jquery.js"></script>
+        <script src="static/js/data_generator.js"></script>
+        <script src="static/js/jquery.timeago.js"></script>
+        <link href='http://fonts.googleapis.com/css?family=Indie+Flower' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="static/css/main.css">
     </head>
     <body>
+        <h1>Twittler</h1>
         <nav>
             <span class="home">Home</span>
+            <span class="refresh">Refresh</span>
         </nav>
         <form class="post-tweet" action="#" method="post">
-            <input name="username" type="text" placeholder="username" required>
-            <textarea name="message" placeholder="What's happening?"></textarea>
-            <button>Post</button>
+            <button>Tweet!</button>
+            <input name="username" type="text" placeholder="Username" required>
+            <textarea name="message" placeholder="What's happening?" maxlength="140"></textarea>
+            
         </form>
         <section id="tweets"></section>
-
-        
-
-        </form>
         <script>
             $(document).ready(function(){
                 var avatars = {
                     'douglascalhoun': 'https://media.licdn.com/media/p/4/000/149/320/1c2f421.jpg',
                     'mracus': 'https://media.licdn.com/media/p/8/005/05d/0b0/2645c4a.jpg',
+                    'shawndrost': 'https://pbs.twimg.com/profile_images/586651979348250624/3n3kd_5P.jpg',
                 }
 
                 // Needed to clear the intervals inside the closures 
@@ -37,12 +41,16 @@
                     function displayNewTweets(stream, index) {    
                         while(index <= stream.length -1){
                             var tweet = stream[index];
+                            // Building elements
                             var time = '<time class="timeago" datetime="' + tweet.created_at.toISOString() + '">' + tweet.created_at.toLocaleDateString() + '</time>';
+                            var image = avatars[tweet.user] ? avatars[tweet.user] : 'static/layout/avatar.png';
+                            var avatar = '<img class="avatar" src="' + image + '">'
                             var user = '<span class="user" data-user="' + tweet.user + '">@' + tweet.user + '</span>';
                             var message = '<span class="message">' + tweet.message + '</span>';
-                            var $tweet = $('<div class="tweet"></div>');
-                            $tweet.html(user + message + time);
+                            var $tweet = $('<div class="tweet"></div>').hide();
+                            $tweet.html(avatar + user + message + time);
                             $tweet.prependTo($('#tweets'));
+                            $tweet.slideDown().fadeIn();
                             index++;
                             // Not sure how else to trigger this on nodes dynamically added to the DOM?
                             $(".timeago").timeago();
@@ -59,17 +67,26 @@
                         }
                     }, 250);
                 }
+
+                var breadcrumb = streams.home;
+
+                $('nav').on('click', '.refresh', function() {
+                    displayStream(breadcrumb);
+                });
+
                 // Display the home stream on load
                 displayStream(streams.home);
 
                 // Displaying users tweets
                 $('#tweets').on('click', '.user', function(){
-                    displayStream(streams.users[$(this).data('user')]);
+                    breadcrumb = streams.users[$(this).data('user')]
+                    displayStream(breadcrumb);
                 });
                 
                 // Displaying all tweets
                 $('nav').on('click', '.home', function(){
-                    displayStream(streams.home);
+                    breadcrumb = streams.home
+                    displayStream(breadcrumb);
                 });
 
                 // Posting a new twweet
