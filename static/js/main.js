@@ -28,10 +28,9 @@ $(document).ready(function(){
                 $tweet.html(avatar + user + message + time);
                 $tweet.prependTo($('#tweets'));
                 $tweet.slideDown().fadeIn();
-                index++;
-                // Not sure how else to trigger this on nodes dynamically added to the DOM?
-                $(".timeago").timeago();
+                index++;                
             }
+            $(".timeago").timeago();
             return index;
         }
         // Loads the pregenerated posts
