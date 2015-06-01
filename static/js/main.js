@@ -13,7 +13,8 @@ $(document).ready(function(){
         // Clear previous tweets
         $('#tweets').html('');
 
-        function displayNewTweets(stream, index) {    
+        function displayNewTweets(stream, index) {
+            var added = 0; 
             while(index <= stream.length -1){
                 var tweet = stream[index];
                 // Building elements
@@ -24,12 +25,20 @@ $(document).ready(function(){
 
                 var message = tweet.message.replace(/(#\w+)/g,'<span class="tag">$1</span>');
                 message = '<span class="message">' + message + '</span>';
-                var $tweet = $('<div class="tweet" data-user="' + tweet.user + '"></div>').hide();
+                var $tweet = $('<div class="tweet" data-user="' + tweet.user + '"></div>').hide()
+                
                 $tweet.html(avatar + user + message + time);
                 $tweet.prependTo($('#tweets'));
-                $tweet.slideDown().fadeIn();
-                index++;                
+                index++;
+                added++; // Count how many were added               
             }
+
+            // Only slide down tweets if less than 5 were added
+            if (added < 15)
+                $('.tweet').slideDown();
+            else
+                $('.tweet').show();
+
             $(".timeago").timeago();
             return index;
         }
